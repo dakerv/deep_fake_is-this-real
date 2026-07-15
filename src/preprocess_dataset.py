@@ -201,7 +201,7 @@ def crop_largest_face(image, detector_type, detector, margin=0.25):
 
 
 # =============================================================================
-# Image Processing
+# Face Cropping and Preprocessing
 # =============================================================================
 
 def process_class_folder(
@@ -209,8 +209,7 @@ def process_class_folder(
     destination_dir,
     detector_type,
     detector,
-    label,
-    max_images=MAX_IMAGES_PER_CLASS
+    label
 ):
     """
     Process one image class.
@@ -292,7 +291,7 @@ def process_class_folder(
     print(f"Images skipped   : {skipped}")
     print()
 
-    # =============================================================================
+# =============================================================================
 # Dataset Splitting
 # =============================================================================
 
