@@ -25,6 +25,8 @@ raw_data/
 │
 ├── real/
 │   ├── real_full/
+│       ├── FFHQ_real/
+│       └── CelebDF_real/
 │   └── real_sampled/
 │
 ├── synthetic/
@@ -301,7 +303,10 @@ def split_dataset(cropped_dir, output_dir):
             print(f"Warning: {class_name} folder not found.")
             continue
 
-        images = list(class_dir.glob("*.jpg"))
+        images =[]
+
+        for ext in ("*.jpg", "*.jpeg","*.png" ):
+            images.extend(class_dir.glob(ext))
 
         if len(images) == 0:
             print(f"Warning: No images found for {class_name}.")
