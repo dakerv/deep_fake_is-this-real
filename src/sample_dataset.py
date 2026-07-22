@@ -242,6 +242,12 @@ def main():
     print("Deepfake Dataset Sampling")
     print("=" * 60)
 
+    print("\nCleaning sampled folders...\n")
+
+    clear_folder(REAL_DEST)
+    clear_folder(SYNTHETIC_DEST)
+    clear_folder(SWAPPED_DEST)
+
 
     print("\nSampling real images...\n")
 
