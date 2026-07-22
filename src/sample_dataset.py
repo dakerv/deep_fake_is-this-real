@@ -132,12 +132,72 @@ def get_image_files(folder):
     list
         A list of image file paths.
     """
-    
+
     image_files = []
 
     for extension in ("*.jpg", "*.jpeg", "*.png"):
         image_files.extend(folder.glob(extension))
 
     return image_files
+
+def sample_imahes (source, destination, number):
+   """
+    Randomly select images from a source folder
+    and copy them into a destination folder.
+
+    Parameters
+    ----------
+    source : Path
+        Folder containing original images.
+
+    destination : Path
+        Folder where sampled images will be copied.
+
+    number : int
+        Number of images to sample.
+
+    """
+
+    # Create destination folder if it does not exist
+   destination.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    # Find all images
+   image_files = get_image_files(source)
+
+   print(f"\nSource: {source}")
+   print(f"Available images: {len(image_files)}")
+
+
+    # Check enough images exist
+   if len(image_files) < number:
+
+        raise ValueError(
+            f"Not enough images available. "
+            f"Requested {number}, found {len(image_files)}"
+        )
+
+
+    # Random selection
+   selected_images = random.sample(
+        image_files,
+        number
+    )
+
+
+    # Copy images
+   for image in selected_images:
+
+        shutil.copy2(
+            image,
+            destination / image.name
+        )
+
+
+   print(
+        f"Copied {number} images to {destination}"
+    ) 
 
 random.seed(RANDOM_SEED)
