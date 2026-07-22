@@ -47,3 +47,68 @@ raw_data/
 
 Author: Vanessa Daker
 """
+
+import random
+import shutil
+from pathlib import Path
+
+# =============
+# Configuration
+# =============
+
+RANDOM_SEED = 42
+
+# Number of images per class
+REAL_IMAGES = 3000
+SYNTHETIC_IMAGES = 3000
+SWAPPED_IMAGES = 3000
+
+# Real dataset contribution
+FFHQ_IMAGES = 1500
+CELEBDF_IMAGES = 1500
+
+RAW_DIR = Path("raw_data")
+
+FFHQ_SOURCE = (
+    RAW_DIR /
+    "real" /
+    "real_full" /
+    "FFHQ_real"
+)
+
+CELEBDF_SOURCE = (
+    RAW_DIR /
+    "real" /
+    "real_full" /
+    "CelebDF_real"
+)
+
+SYNTHETIC_SOURCE = (
+    RAW_DIR /
+    "synthetic" /
+    "synthetic_full"
+)
+
+SWAPPED_SOURCE = (
+    RAW_DIR /
+    "swapped" /
+    "swapped_full"
+)
+
+REAL_DEST = (
+    RAW_DIR /
+    "real" /
+    "real_sampled"
+)
+
+SYNTHETIC_DEST = (
+    RAW_DIR /
+    "synthetic" /
+    "synthetic_sampled"
+)
+
+SWAPPED_DEST = (
+    RAW_DIR /
+    "swapped" /
+    "swapped_sampled"
+)
