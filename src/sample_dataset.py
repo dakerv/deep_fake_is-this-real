@@ -58,14 +58,14 @@ from pathlib import Path
 
 RANDOM_SEED = 42
 
-# Number of images per class
-REAL_IMAGES = 3000
-SYNTHETIC_IMAGES = 3000
-SWAPPED_IMAGES = 3000
-
 # Real dataset contribution
 FFHQ_IMAGES = 1500
 CELEBDF_IMAGES = 1500
+
+# Number of images per class
+REAL_IMAGES = FFHQ_IMAGES + CELEBDF_IMAGES
+SYNTHETIC_IMAGES = 3000
+SWAPPED_IMAGES = 3000
 
 RAW_DIR = Path("raw_data")
 
