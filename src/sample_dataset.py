@@ -1,52 +1,49 @@
-from pathlib import Path
-import random
-import shutil
+"""
+Deepfake Detection - Data Sampling Pipeline
 
-# ----------------------------
-# Configuration
-# ----------------------------
-RANDOM_SEED = 42
-NUM_IMAGES = 2000
+===========================================
 
-SOURCE_DIR = Path("raw_data/real_full")
-DEST_DIR = Path("raw_data/real")
+Creates balanced sampled datasets for training the 
+deepfake detection model.
 
-random.seed(RANDOM_SEED)
+The script ranomdly selects images from the original datasets and copies them into seperate sampled folders.
 
-# ----------------------------
-# Create destination folder
-# ----------------------------
-DEST_DIR.mkdir(parents=True, exist_ok=True)
+Classes
+-------
 
-# ----------------------------
-# Find all images
-# ----------------------------
-image_files = []
+1. REAL CLASS: Sampled from FFHQ and CelebDF datasets.
+--------------
+2. SYNTHETIC CLASS: StyleGAN3 Fake Faces
+-------------------
+3. SWAPPED CLASS: FFHQ Face Swap Dataset
+-----------------
 
-for ext in ("*.jpg", "*.jpeg", "*.png"):
-    image_files.extend(SOURCE_DIR.glob(ext))
+Pipeline
+--------
+1. Load original datasets
+2. Randomly sample images
+3. Combine the two real datasets
+4. Create balanced sampled datasets
 
-print(f"Found {len(image_files)} images.")
+Expected folder structure
+-------------------------
 
-# ----------------------------
-# Check enough images exist
-# ----------------------------
-if len(image_files) < NUM_IMAGES:
-    raise ValueError(
-        f"Only found {len(image_files)} images."
-    )
+raw_data/
+│
+├── real/
+│   ├── real_full/
+│   │   ├── FFHQ_real/
+│   │   └── CelebDF_real/
+│   │
+│   └── real_sampled/
+│
+├── synthetic/
+│   ├── synthetic_full/
+│   └── synthetic_sampled/
+│
+└── swapped/
+    ├── swapped_full/
+    └── swapped_sampled/
 
-# ----------------------------
-# Randomly select images
-# ----------------------------
-selected = random.sample(image_files, NUM_IMAGES)
-
-print(f"Selected {len(selected)} images.")
-
-# ----------------------------
-# Copy them
-# ----------------------------
-for img in selected:
-    shutil.copy(img, DEST_DIR / img.name)
-
-print("Done!")
+Author: Vanessa Daker
+"""
