@@ -232,7 +232,7 @@ def process_class_folder(
     skipped = 0
 
     progress = tqdm(
-        total=min(len(image_files), max_images),
+        image_files,
         desc=f"Processing {label}"
     )
 
