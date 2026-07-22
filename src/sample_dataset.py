@@ -113,6 +113,8 @@ SWAPPED_DEST = (
     "swapped_sampled"
 )
 
+random.seed(RANDOM_SEED)
+
 def get_image_files(folder):
     """
     Retrieve all image files from a folder.
@@ -140,7 +142,7 @@ def get_image_files(folder):
 
     return image_files
 
-def sample_imahes (source, destination, number):
+def sample_images (source, destination, number):
    """
     Randomly select images from a source folder
     and copy them into a destination folder.
@@ -158,20 +160,20 @@ def sample_imahes (source, destination, number):
 
     """
 
-    # Create destination folder if it does not exist
+   # Create destination folder if it does not exist
    destination.mkdir(
         parents=True,
         exist_ok=True
     )
 
-    # Find all images
+   # Find all images
    image_files = get_image_files(source)
 
    print(f"\nSource: {source}")
    print(f"Available images: {len(image_files)}")
 
 
-    # Check enough images exist
+   # Check enough images exist
    if len(image_files) < number:
 
         raise ValueError(
@@ -180,14 +182,13 @@ def sample_imahes (source, destination, number):
         )
 
 
-    # Random selection
+   # Random selection
    selected_images = random.sample(
         image_files,
         number
     )
 
-
-    # Copy images
+   # Copy images
    for image in selected_images:
 
         shutil.copy2(
@@ -200,4 +201,58 @@ def sample_imahes (source, destination, number):
         f"Copied {number} images to {destination}"
     ) 
 
-random.seed(RANDOM_SEED)
+# =============
+# Main Pipeline
+# =============
+
+def main():
+    
+    print("=" * 60)
+    print("Deepfake Dataset Sampling")
+    print("=" * 60)
+
+
+    print("\nSampling real images...\n")
+
+    # Sample FFHQ real images
+    sample_images(
+        FFHQ_SOURCE,
+        REAL_DEST,
+        FFHQ_IMAGES
+    )
+
+
+    # Sample CelebDF real images
+    sample_images(
+        CELEBDF_SOURCE,
+        REAL_DEST,
+        CELEBDF_IMAGES
+    )
+
+
+    print("\nSampling synthetic images...\n")
+
+    sample_images(
+        SYNTHETIC_SOURCE,
+        SYNTHETIC_DEST,
+        SYNTHETIC_IMAGES
+    )
+
+
+    print("\nSampling swapped images...\n")
+
+    sample_images(
+        SWAPPED_SOURCE,
+        SWAPPED_DEST,
+        SWAPPED_IMAGES
+    )
+
+
+    print("\n" + "=" * 60)
+    print("Dataset sampling completed successfully!")
+    print("=" * 60)
+
+
+
+if __name__ == "__main__":
+    main()
