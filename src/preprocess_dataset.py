@@ -71,7 +71,7 @@ RANDOM_SEED = 42
 
 # Maximum number of images to process from each class.
 # Keeping the classes balanced improves model training.
-MAX_IMAGES_PER_CLASS = 2000
+MAX_IMAGES_PER_CLASS = 3000
 
 # Class names
 CLASSES = [
