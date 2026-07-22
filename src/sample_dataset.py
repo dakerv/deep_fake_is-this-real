@@ -289,14 +289,15 @@ def main():
     print("Dataset sampling completed successfully!")
     print("=" * 60)
 
-
+    print("\nFinal sampled dataset:")
+    print("----------------------")
+    print(f"Real images: {REAL_IMAGES}")
+    print(f"Synthetic images: {SYNTHETIC_IMAGES}")
+    print(f"Swapped images: {SWAPPED_IMAGES}")
+    print(
+        f"Total images: "
+        f"{REAL_IMAGES + SYNTHETIC_IMAGES + SWAPPED_IMAGES}"
+    )
 
 if __name__ == "__main__":
     main()
-
-print("\nFinal sampled dataset:")
-print("----------------------")
-print("Real images: 3000")
-print("Synthetic images: 3000")
-print("Swapped images: 3000")
-print("Total images: 9000")
