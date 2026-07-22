@@ -21,7 +21,7 @@ DEST_DIR.mkdir(parents=True, exist_ok=True)
 # ----------------------------
 # Find all images
 # ----------------------------
-image_files = list(SOURCE_DIR.glob("*.jpg"))
+image_files = list(SOURCE_DIR.glob("*.jpg", "*.jpeg", ".*png"))
 
 print(f"Found {len(image_files)} images.")
 
