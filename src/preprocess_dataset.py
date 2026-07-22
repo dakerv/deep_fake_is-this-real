@@ -236,10 +236,7 @@ def process_class_folder(
         desc=f"Processing {label}"
     )
 
-    for image_path in image_files:
-
-        if kept >= max_images:
-            break
+    for image_path in progress:
 
         image = cv2.imread(str(image_path))
 
