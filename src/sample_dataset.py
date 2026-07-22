@@ -117,7 +117,7 @@ random.seed(RANDOM_SEED)
 
 def get_image_files(folder):
     """
-    Retrieve all image files from a folder.
+    Retrieve all image files from a folder and its subfolders.
 
     Supported formats:
     - JPG
@@ -174,7 +174,8 @@ def clear_folder(folder):
         )
 
 def sample_images (source, destination, number):
-   """
+
+    """
     Randomly select images from a source folder
     and copy them into a destination folder.
 
@@ -192,20 +193,20 @@ def sample_images (source, destination, number):
     """
 
    # Create destination folder if it does not exist
-   destination.mkdir(
+    destination.mkdir(
        parents=True,
        exist_ok=True
     )
 
    # Find all images
-   image_files = get_image_files(source)
+    image_files = get_image_files(source)
 
-   print(f"\nSource: {source}")
-   print(f"Available images: {len(image_files)}")
+    print(f"\nSource: {source}")
+    print(f"Available images: {len(image_files)}")
 
 
-   # Check enough images exist
-   if len(image_files) < number:
+    # Check enough images exist
+    if len(image_files) < number:
 
         raise ValueError(
             f"Not enough images available. "
@@ -213,14 +214,14 @@ def sample_images (source, destination, number):
         )
 
 
-   # Random selection
-   selected_images = random.sample(
+    # Random selection
+    selected_images = random.sample(
         image_files,
         number
     )
 
-   # Copy images
-   for image in selected_images:
+    # Copy images
+    for image in selected_images:
 
         shutil.copy2(
             image,
@@ -228,7 +229,7 @@ def sample_images (source, destination, number):
         )
 
 
-   print(
+    print(
         f"Copied {number} images to {destination}"
     ) 
 
