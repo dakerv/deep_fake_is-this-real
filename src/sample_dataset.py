@@ -138,7 +138,7 @@ def get_image_files(folder):
     image_files = []
 
     for extension in ("*.jpg", "*.jpeg", "*.png"):
-        image_files.extend(folder.glob(extension))
+        image_files.extend(folder.rglob(extension))
 
     return image_files
 
