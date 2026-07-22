@@ -142,6 +142,37 @@ def get_image_files(folder):
 
     return image_files
 
+def clear_folder(folder):
+    """
+    Remove all files and subfolders inside a directory.
+
+    The folder itself is recreated after clearing.
+
+    Parameters
+    ----------
+    folder : Path
+        Folder to empty.
+    """
+
+    if folder.exists():
+
+        for item in folder.iterdir():
+
+            if item.is_file():
+
+                item.unlink()
+
+            elif item.is_dir():
+
+                shutil.rmtree(item)
+
+    else:
+
+        folder.mkdir(
+            parents=True,
+            exist_ok=True
+        )
+
 def sample_images (source, destination, number):
    """
     Randomly select images from a source folder
@@ -206,7 +237,7 @@ def sample_images (source, destination, number):
 # =============
 
 def main():
-    
+
     print("=" * 60)
     print("Deepfake Dataset Sampling")
     print("=" * 60)
