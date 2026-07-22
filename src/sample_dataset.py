@@ -112,3 +112,32 @@ SWAPPED_DEST = (
     "swapped" /
     "swapped_sampled"
 )
+
+def get_image_files(folder):
+    """
+    Retrieve all image files from a folder.
+
+    Supported formats:
+    - JPG
+    - JPEG
+    - PNG
+
+    Parameters
+    ----------
+    folder : Path
+        Folder containing images.
+
+    Returns
+    -------
+    list
+        A list of image file paths.
+    """
+    
+    image_files = []
+
+    for extension in ("*.jpg", "*.jpeg", "*.png"):
+        image_files.extend(folder.glob(extension))
+
+    return image_files
+
+random.seed(RANDOM_SEED)
