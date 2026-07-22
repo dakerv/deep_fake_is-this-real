@@ -6,7 +6,7 @@ Deepfake Detection - Data Sampling Pipeline
 Creates balanced sampled datasets for training the 
 deepfake detection model.
 
-The script ranomdly selects images from the original datasets and copies them into seperate sampled folders.
+The script randomly selects images from the original datasets and copies them into separate sampled folders.
 
 Classes
 -------
@@ -193,8 +193,8 @@ def sample_images (source, destination, number):
 
    # Create destination folder if it does not exist
    destination.mkdir(
-        parents=True,
-        exist_ok=True
+       parents=True,
+       exist_ok=True
     )
 
    # Find all images
@@ -293,3 +293,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+print("\nFinal sampled dataset:")
+print("----------------------")
+print("Real images: 3000")
+print("Synthetic images: 3000")
+print("Swapped images: 3000")
+print("Total images: 9000")
