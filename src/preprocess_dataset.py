@@ -252,7 +252,8 @@ def process_class_folder(
 
     progress = tqdm(
         image_files,
-        desc=f"Processing {label}"
+        desc=f"Processing {label}",
+        ascii=True
     )
 
     for image_path in progress:
