@@ -5,7 +5,7 @@ from torchvision import transforms
 
 class DeepfakeDataset(Dataset):
     def __init__(self, root_dir, transform=None):
-        se7dlf.root_dir = Path(root_dir)
+        self.root_dir = Path(root_dir)
         self.transform = transform
 
         self.classes = [
@@ -21,3 +21,17 @@ class DeepfakeDataset(Dataset):
 
         self.images = []
         self.load_images()
+
+    def load_images(self):
+        for class_name in self.classes:
+            class_folder = self.root_dir / class_name
+            label = self.class_to_index[class_name]
+
+            for image_path in class_folder.glob("*"):
+
+                self.images.append(
+                    (
+                        image_path,
+                        label
+                    )
+                )
