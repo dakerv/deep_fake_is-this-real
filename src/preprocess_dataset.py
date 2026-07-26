@@ -235,8 +235,6 @@ def process_class_folder(
     for extension in ("*.jpg", "*.jpeg", "*.png"):
         image_files.extend(source_dir.glob(extension))
 
-    random.shuffle(image_files)
-
     kept = 0
     skipped = 0
 
