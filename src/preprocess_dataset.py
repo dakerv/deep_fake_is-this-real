@@ -105,12 +105,12 @@ def get_face_detector():
         )
 
         print("✓ Using MTCNN face detector")
-        return "mtcnn", MTCNN()
+        return "mtcnn", detector
 
 
     except ImportError:
 
-        print("⚠ MTCNN not installed.")
+        print("FaceNet MTCNN not installed.")
         print("  Falling back to Haar Cascade detector.")
 
         cascade_path = (
@@ -156,19 +156,20 @@ def crop_largest_face(image, detector_type, detector, margin=0.25):
 
         rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
-        detections = detector.detect_faces(rgb)
+        boxes, _ = detector.detect(rgb)
 
-        boxes = []
+        if boxes is None:
+         return None
 
-        for detection in detections:
-
-            x, y, w, h = detection["box"]
-
-            # MTCNN occasionally returns slightly negative coordinates.
-            x = max(0, x)
-            y = max(0, y)
-
-            boxes.append((x, y, w, h))
+        boxes = [
+            (
+                int(box[0]),
+                int(box[1]),
+                int(box[2] - box[0]),
+                int(box[3] - box[1])
+            )
+            for box in boxes
+        ]
 
     else:
 
@@ -281,8 +282,6 @@ def process_class_folder(
         )
 
         kept += 1
-
-        progress.update(1)
 
     progress.close()
 
