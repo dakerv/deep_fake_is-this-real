@@ -80,6 +80,18 @@ CLASSES = [
 
 random.seed(RANDOM_SEED)
 
+# =============
+# Clear Folder
+# =============
+
+def clear_folder(folder):
+    if folder.exists():
+        shutil.rmtree(folder)
+
+    folder.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
 # =============================================================================
 # Face Detector
@@ -366,6 +378,9 @@ def main():
     print("=" * 60)
     print("Deepfake Dataset Preprocessing")
     print("=" * 60)
+
+    clear_folder(CROPPED_DIR)
+    clear_folder(OUTPUT_DIR)
 
     detector_type, detector = get_face_detector()
 
