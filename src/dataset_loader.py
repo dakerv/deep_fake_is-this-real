@@ -35,3 +35,6 @@ class DeepfakeDataset(Dataset):
                         label
                     )
                 )
+
+    def __len__(self):
+        return len(self.images)
