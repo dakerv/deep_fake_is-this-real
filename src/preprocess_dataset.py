@@ -25,8 +25,8 @@ raw_data/
 │
 ├── real/
 │   ├── real_full/
-│       ├── FFHQ_real/
-│       └── CelebDF_real/
+│   |    ├── FFHQ_real/
+│   |    └── CelebDF_real/
 │   └── real_sampled/
 │
 ├── synthetic/
