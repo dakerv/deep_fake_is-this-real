@@ -97,10 +97,16 @@ def get_face_detector():
     """
 
     try:
-        from mtcnn import MTCNN
+        from facenet_pytorch import MTCNN
+
+        detector = MTCNN(
+            keep_all=True,
+            device='cpu'
+        )
 
         print("✓ Using MTCNN face detector")
         return "mtcnn", MTCNN()
+
 
     except ImportError:
 
