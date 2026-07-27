@@ -58,13 +58,19 @@ if __name__ == "__main__":
     print(f"PyTorch version: {torch.__version__}")
     print(f"Using device: {DEVICE}")
 
-
-"""
+# ===============
 # Load the Datset
+# ===============
 train_loader, val_loader, test_loader = create_dataloaders(
     DATASET_DIR,
     BATCH_SIZE
 )
+
+print ("\nDataset loaded successfully!")
+
+print(f"Training batches: {len(train_loader)}")
+print(f"Validation batches: {len(val_loader)}")
+print(f"Testing batches: {len(test_loader)}")
 
 from torchvision.models import (
     efficientnet_b0,
