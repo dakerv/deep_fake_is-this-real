@@ -118,3 +118,41 @@ class DeepfakeDataset(Dataset):
         )
 
         return train_transform, val_transform
+
+    def create_dataloaders(data_dir, batch_size=32):
+        train_transform, val_transform = get_transforms()
+
+        train_dataset = DeepfakeDataset(
+            Path(data_dir) / "train",
+            train_transform
+        )
+
+        val_dataset = DeepfakeDataset(
+            Path(data_dir) / "val",
+            val_transform
+        )
+
+        test_dataset = DeepfakeDataset(
+            Path(data_dir) / "test",
+            val_transform
+        )
+
+        train_loader = DataLoader(
+            train_dataset,
+            batch_size=batch_size,
+            shuffle=True
+        )
+
+        val_loader = DataLoader(
+            val_dataset,
+            batch_size=batch_size,
+            shuffle=False
+        )
+
+        test_loader = DataLoader(
+            test_dataset,
+            batch_size=batch_size,
+            shuffle=False
+        )
+
+        return train_loader, val_loader, test_loader
