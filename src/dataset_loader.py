@@ -158,19 +158,21 @@ def create_dataloaders(data_dir, batch_size=32):
 
         return train_loader, val_loader, test_loader
 
+DATASET_DIR = Path("dataset")
+
 if __name__ == "__main__":
-        train_loader, val_loader, test_loader = create_dataloaders()
+        train_loader, val_loader, test_loader = create_dataloaders(DATASET_DIR)
 
-print("Train batches:", len(train_loader))
-print("Validation batches:", len(val_loader))
-print("Test batches:", len(test_loader))
+        print("Train batches:", len(train_loader))
+        print("Validation batches:", len(val_loader))
+        print("Test batches:", len(test_loader))
 
-images, labels = next(iter(train_loader))
+        images, labels = next(iter(train_loader))
 
-print("Image batch shape:", images.shape)
-print("Label batch shape:", labels.shape)
+        print("Image batch shape:", images.shape)
+        print("Label batch shape:", labels.shape)
 
-print("Labels:", labels)
+        print("Labels:", labels)
 
-print(train_loader.dataset.classes)
-print(train_loader.dataset.class_to_idx)
+        print(train_loader.dataset.classes)
+        print(train_loader.dataset.class_to_idx)
