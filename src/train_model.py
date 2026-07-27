@@ -98,6 +98,36 @@ model.to(DEVICE)
 print ("\nModel created successfully!")
 print (model)
 
+# =================
+# Forward Pass Test
+# =================
+
+model.eval() # switch model to evaluation mode (testing)
+
+images,labels = next(iter(train_loader))
+
+images = images.to(DEVICE)
+labels = labels.to(DEVICE)
+
+with torch.no_grad():
+    outputs = model(images)
+
+# ==========
+# Extra Test
+# ==========
+print("\nForward pass successful!")
+
+print("Input shape:")
+print(images.shape)
+
+print("\nOutput shape:")
+print(outputs.shape)
+
+print("\nPredictions:")
+print(outputs)
+
+
+
 """
 
 # Loss function for multi-class classification
