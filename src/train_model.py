@@ -55,6 +55,7 @@ if __name__ == "__main__":
     print ("EfficientNet-B0 Training Pipeline")
     print ("=" * 60)
 
+    print(f"PyTorch version: {torch.__version__}")
     print(f"Using device: {DEVICE}")
 
 
