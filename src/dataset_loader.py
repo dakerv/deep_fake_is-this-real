@@ -119,7 +119,8 @@ class DeepfakeDataset(Dataset):
 
         return train_transform, val_transform
 
-    def create_dataloaders(data_dir, batch_size=32):
+def create_dataloaders(data_dir, batch_size=32):
+        
         train_transform, val_transform = get_transforms()
 
         train_dataset = DeepfakeDataset(
@@ -157,19 +158,19 @@ class DeepfakeDataset(Dataset):
 
         return train_loader, val_loader, test_loader
 
-    if __name__ == "__main__":
+if __name__ == "__main__":
         train_loader, val_loader, test_loader = create_dataloaders()
 
-    print("Train batches:", len(train_loader))
-    print("Validation batches:", len(val_loader))
-    print("Test batches:", len(test_loader))
+print("Train batches:", len(train_loader))
+print("Validation batches:", len(val_loader))
+print("Test batches:", len(test_loader))
 
-    images, labels = next(iter(train_loader))
+images, labels = next(iter(train_loader))
 
-    print("Image batch shape:", images.shape)
-    print("Label batch shape:", labels.shape)
+print("Image batch shape:", images.shape)
+print("Label batch shape:", labels.shape)
 
-    print("Labels:", labels)
+print("Labels:", labels)
 
-    print(train_loader.dataset.classes)
-    print(train_loader.dataset.class_to_idx)
+print(train_loader.dataset.classes)
+print(train_loader.dataset.class_to_idx)
