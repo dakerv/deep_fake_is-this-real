@@ -23,25 +23,42 @@ Pipeline:
 
 Author: Vanessa Daker
 """
+import torch
+import torch.nn as nn #neural network layers and loss functions
+from torch.optim import Adam #chosen optimizer
+from torchvision.models import (
+    efficientnet_b0, #loads CNN architecture
+    EfficientNet_B0_Weights #pretrained ImageNet weights
+)
+from dataset_loader import create_dataloaders
 
 # =============
 # Configuration
 # =============
 
 DATASET_DIR = "dataset"
-
+MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
 BATCH_SIZE = 32
 EPOCHS = 15
-LEARNING_RATE = 1e-4
-
+LEARNING_RATE = 0.0001 #standard starting point for transfer learning
 NUM_CLASSES = 3
-
-MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
-
 DEVICE = (
     "cpu"
 )
 
+# ======================
+# Basic Environment Test
+# ======================
+
+if __name__ == "__main__":
+    print ("=" * 60)
+    print ("EfficientNet-B0 Training Pipeline")
+    print ("=" * 60)
+
+    print(f"Using device: {DEVICE}")
+
+
+"""
 # Load the Datset
 train_loader, val_loader, test_loader = create_dataloaders(
     DATASET_DIR,
@@ -75,3 +92,4 @@ optimizer = torch.optim.Adam(
     model.parameters(),
     lr=LEARNING_RATE
 )
+"""
