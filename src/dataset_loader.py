@@ -29,6 +29,23 @@ Pytorch needs code that answers three questions:
 2. Give an image number - returns (image, label)
 3. Convert image to format a CNN expects - channels x height x width
 
+The loader loads the preprocessed image dataset into
+Pytorch for training, validation and testing. 
+
+The module defines a custom Dataset class that reads images
+and assigns class labels, applies image transformations and
+returns tensors suitable for EfficientNet.
+
+Pipeline
+--------
+1. Load images paths
+2. Assign numerical labels
+3. Apply image transformations
+4. Create PyTorch datasets
+5. Build Dataloaders for training
+
+Author: Vanessa Daker
+
 """
 
 class DeepfakeDataset(Dataset):
@@ -51,6 +68,7 @@ class DeepfakeDataset(Dataset):
         self.load_images()
 
     def load_images(self):
+        #Collect every image path
         for class_name in self.classes:
             class_folder = self.root_dir / class_name
             label = self.class_to_index[class_name]
@@ -67,9 +85,21 @@ class DeepfakeDataset(Dataset):
                 )
 
     def __len__(self):
+        """
+        Return the total number of images in the dataset
+        """
         return len(self.images)
 
     def __getitem__(self, index):
+        """
+        Retrieve one image and its corresponding label. The
+        image is read and then converted to RGB, transformed
+        into a tensor and returned with its numerical label.
+        """
+
+        #To prevent grayscale images from getting through
+        # and causing confusion, we convert everything to
+        # RGB.
         image_path, label = self.images[index]
         image = Image.open(image_path).convert("RGB")
 
@@ -79,6 +109,9 @@ class DeepfakeDataset(Dataset):
         return image, label
 
 def get_transforms():
+        # Augmenting the data during training alone.
+        # Exposes the model to slightly different versions
+        # to reduce overfitting.
         train_transform = transforms.Compose(
             [
                transforms.RandomHorizontalFlip(),
@@ -140,6 +173,8 @@ def create_dataloaders(data_dir, batch_size=32):
             val_transform
         )
 
+        #Randomise the order of training images per epoch
+        #to reduce learning bias.
         train_loader = DataLoader(
             train_dataset,
             batch_size=batch_size,
