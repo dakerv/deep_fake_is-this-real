@@ -82,14 +82,23 @@ weights = EfficientNet_B0_Weights.DEFAULT
 model = efficientnet_b0(
     weights=weights
 )
-"""
+
 # EfficientNet predicts 1000 ImageNet classes, but we need
 # only three.
 model.classifier[1] = nn.Linear(
-    1280,
-    NUM_CLASSES
+    1280, #1280 feature values
+    NUM_CLASSES #my three classes
 )
 model.to(DEVICE)
+
+# ====
+# Test
+# ====
+
+print ("\nModel created successfully!")
+print (model)
+
+"""
 
 # Loss function for multi-class classification
 criterion = nn.CrossEntropyLoss()
