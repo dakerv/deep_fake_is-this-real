@@ -116,6 +116,10 @@ class DeepfakeDataset(Dataset):
 
         return image, label
 
+# =====================
+# Image Transformations
+# =====================    
+
 def get_transforms():
         # Augmenting the data during training alone.
         # Exposes the model to slightly different versions
@@ -163,6 +167,10 @@ def get_transforms():
         )
 
         return train_transform, val_transform
+
+# =======================
+# Creating the Dataloader
+# =======================
 
 def create_dataloaders(data_dir, batch_size=32):
         
