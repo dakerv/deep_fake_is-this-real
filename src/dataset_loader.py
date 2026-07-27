@@ -55,7 +55,9 @@ class DeepfakeDataset(Dataset):
             class_folder = self.root_dir / class_name
             label = self.class_to_index[class_name]
 
-            for image_path in class_folder.glob("*"):
+            for extension in ("*.jpg", "*.jpeg", "*.png"):
+                for image_path in class_folder.glob(extension):
+                    self.images.append((image_path, label))
 
                 self.images.append(
                     (
@@ -175,4 +177,4 @@ if __name__ == "__main__":
         print("Labels:", labels)
 
         print(train_loader.dataset.classes)
-        print(train_loader.dataset.class_to_idx)
+        print(train_loader.dataset.class_to_index)
