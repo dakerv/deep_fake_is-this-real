@@ -76,7 +76,7 @@ class DeepfakeDataset(Dataset):
 
         return image, label
 
-    def get_transforms():
+def get_transforms():
         train_transform = transforms.Compose(
             [
                transforms.RandomHorizontalFlip(),
