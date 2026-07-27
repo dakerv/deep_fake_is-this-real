@@ -1,3 +1,29 @@
+"""
+EfficientNet-B0 Training Pipeline
+---------------------------------
+
+Trains the EfficientNet-B0 convolutional neural network using
+transfer learning for the three-classes of my deepfake image
+classification.
+
+Classes:
+--------
+- Real
+- Swapped
+- Synthetic
+
+Pipeline:
+---------
+1. Load preprocessed dataset
+2. Create EfficientNet-B0 model
+3. Replace ImageNet classifier with three-class classifier
+4. Train model
+5. Validate model performance
+6. Save best performing model
+
+Author: Vanessa Daker
+"""
+
 # =============
 # Configuration
 # =============
