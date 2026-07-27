@@ -170,3 +170,6 @@ class DeepfakeDataset(Dataset):
     print("Label batch shape:", labels.shape)
 
     print("Labels:", labels)
+
+    print(train_loader.dataset.classes)
+    print(train_loader.dataset.class_to_idx)
