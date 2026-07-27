@@ -48,6 +48,10 @@ Author: Vanessa Daker
 
 """
 
+# =============
+# Dataset Class
+# =============
+
 class DeepfakeDataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = Path(root_dir)
@@ -84,6 +88,10 @@ class DeepfakeDataset(Dataset):
                     )
                 )
 
+    # ------------------------
+    # Required Dataset Methods
+    # ------------------------            
+
     def __len__(self):
         """
         Return the total number of images in the dataset
@@ -97,10 +105,10 @@ class DeepfakeDataset(Dataset):
         into a tensor and returned with its numerical label.
         """
 
-        #To prevent grayscale images from getting through
-        # and causing confusion, we convert everything to
-        # RGB.
         image_path, label = self.images[index]
+        #To prevent grayscale images from getting through
+        # and causing confusion, everything is converted to
+        # RGB.
         image = Image.open(image_path).convert("RGB")
 
         if self.transform:
@@ -134,6 +142,8 @@ def get_transforms():
             ]
         )
 
+        # No augmentation done on validation.
+        # The performance is evaluated on original data.
         val_transform = transforms.Compose(
             [
                 transforms.ToTensor(),
@@ -196,6 +206,10 @@ def create_dataloaders(data_dir, batch_size=32):
         return train_loader, val_loader, test_loader
 
 DATASET_DIR = Path("dataset")
+
+# ===================
+# Test Dataset Loader
+# ===================
 
 if __name__ == "__main__":
         train_loader, val_loader, test_loader = create_dataloaders(DATASET_DIR)
