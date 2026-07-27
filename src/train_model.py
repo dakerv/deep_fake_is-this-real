@@ -66,23 +66,23 @@ train_loader, val_loader, test_loader = create_dataloaders(
     BATCH_SIZE
 )
 
+#Test script
 print ("\nDataset loaded successfully!")
 
 print(f"Training batches: {len(train_loader)}")
 print(f"Validation batches: {len(val_loader)}")
 print(f"Testing batches: {len(test_loader)}")
 
-from torchvision.models import (
-    efficientnet_b0,
-    EfficientNet_B0_Weights
-)
+# ==============
+# Model Creation
+# ==============
 
 weights = EfficientNet_B0_Weights.DEFAULT
 
 model = efficientnet_b0(
     weights=weights
 )
-
+"""
 # EfficientNet predicts 1000 ImageNet classes, but we need
 # only three.
 model.classifier[1] = nn.Linear(
