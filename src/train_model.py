@@ -38,8 +38,8 @@ from dataset_loader import create_dataloaders
 
 DATASET_DIR = "dataset"
 MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
-BATCH_SIZE = 32
-EPOCHS = 15
+BATCH_SIZE = 4
+EPOCHS = 1
 LEARNING_RATE = 0.0001 # baseline configuration
 NUM_CLASSES = 3
 DEVICE = (
@@ -151,12 +151,63 @@ print(f"Optimizer: Adam")
 print(f"Learning rate: {LEARNING_RATE}")
 
 
-# =======================
+# =========================
 # Training and Validation
-# =======================
+# =========================
+
+print("\nStarting training...")
 
 for epoch in range(EPOCHS):
-    # Training Phase
-    # --------------
+
+    print(f"\nStarting epoch {epoch + 1}/{EPOCHS}")
 
     model.train()
+
+    running_train_loss = 0.0
+    correct_train = 0
+    total_train = 0
+
+    for batch_index, (images, labels) in enumerate(train_loader):
+
+        print(
+            f"Loading batch {batch_index + 1}/{len(train_loader)}..."
+        )
+
+        images = images.to(DEVICE)
+        labels = labels.to(DEVICE)
+
+        print("Batch loaded.")
+
+        optimizer.zero_grad()
+
+        print("Starting forward pass...")
+
+        outputs = model(images)
+
+        print("Forward pass complete.")
+
+        loss = criterion(outputs, labels)
+
+        print(f"Loss calculated: {loss.item():.4f}")
+
+        print("Starting backward pass...")
+
+        loss.backward()
+
+        print("Backward pass complete.")
+
+        optimizer.step()
+
+        print("Optimizer step complete.")
+
+        running_train_loss += loss.item()
+
+        _, predicted = torch.max(outputs, 1)
+
+        total_train += labels.size(0)
+        correct_train += (predicted == labels).sum().item()
+
+        # Stop after the first batch for this diagnostic
+        break
+
+    print("\nFirst training batch completed successfully.")
