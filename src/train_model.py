@@ -39,6 +39,9 @@ from pathlib import Path
 
 DATASET_DIR = "dataset"
 MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
+RESUME_CHECKPOINT_PATH = "models/training_checkpoint.pth" # Recovery checkpoint
+CHECKPOINT_FREQUENCY = 50 #Save a recovery checkpoint for every 50 batches
+RESUME_TRAINING = False # Will be set to true when resuming an interrupted training run
 BEST_VAL_ACCURACY = 0.0
 BATCH_SIZE = 8
 EPOCHS = 3
@@ -90,8 +93,7 @@ model = efficientnet_b0(
     weights=weights
 )
 
-# EfficientNet predicts 1000 ImageNet classes, but we need
-# only three.
+# EfficientNet predicts 1000 ImageNet classes, but we need only three.
 model.classifier[1] = nn.Linear(
     1280, #1280 feature values
     NUM_CLASSES #my three classes
