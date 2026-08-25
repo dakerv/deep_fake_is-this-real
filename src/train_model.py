@@ -128,14 +128,24 @@ print(outputs)
 
 
 
-"""
+# ===========================
+# Loss Function and Optimizer
+# ===========================
 
-# Loss function for multi-class classification
+
+# Loss function for three-class classification
+# Measures how far predicted class scores are from correct
+# class.
 criterion = nn.CrossEntropyLoss()
 
-# Using Adam as our optimizer
+# Using Adam as optimizer, updates model's weights during
+# training.
 optimizer = torch.optim.Adam(
     model.parameters(),
     lr=LEARNING_RATE
 )
-"""
+
+print("\nLoss function and optimizer created successfully!")
+print(f"Loss function: {criterion}")
+print(f"Optimizer: Adam")
+print(f"Learning rate: {LEARNING_RATE}")

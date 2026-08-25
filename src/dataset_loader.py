@@ -72,7 +72,7 @@ class DeepfakeDataset(Dataset):
         self.load_images()
 
     def load_images(self):
-        #Collect every image path
+        # Collect every image path
         for class_name in self.classes:
             class_folder = self.root_dir / class_name
             label = self.class_to_index[class_name]
@@ -184,8 +184,8 @@ def create_dataloaders(data_dir, batch_size=32):
             val_transform
         )
 
-        #Randomise the order of training images per epoch
-        #to reduce learning bias.
+        # Randomise the order of training images per epoch
+        # to reduce learning bias.
         train_loader = DataLoader(
             train_dataset,
             batch_size=batch_size,

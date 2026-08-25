@@ -105,7 +105,7 @@ def get_face_detector():
 
 
 def crop_largest_face(image, detector_type, detector, margin: float = 0.25):
-    """Detect faces in an image and return the crop of the largest one, with margin."""
+    """Detect faces in an image and return the crop of the largest one, with margin approximately 25% padding around detected face."""
     h, w = image.shape[:2]
 
     if detector_type == "mtcnn":
