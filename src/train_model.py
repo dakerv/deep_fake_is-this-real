@@ -38,7 +38,7 @@ from dataset_loader import create_dataloaders
 
 DATASET_DIR = "dataset"
 MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
-BATCH_SIZE = 4
+BATCH_SIZE = 8
 EPOCHS = 1
 LEARNING_RATE = 0.0001 # baseline configuration
 NUM_CLASSES = 3
@@ -155,6 +155,8 @@ print(f"Learning rate: {LEARNING_RATE}")
 # Training and Validation
 # =========================
 
+import time
+
 print("\nStarting training...")
 
 for epoch in range(EPOCHS):
@@ -167,38 +169,22 @@ for epoch in range(EPOCHS):
     correct_train = 0
     total_train = 0
 
-    for batch_index, (images, labels) in enumerate(train_loader):
+    start_time = time.time()
 
-        print(
-            f"Loading batch {batch_index + 1}/{len(train_loader)}..."
-        )
+    for batch_index, (images, labels) in enumerate(train_loader):
 
         images = images.to(DEVICE)
         labels = labels.to(DEVICE)
 
-        print("Batch loaded.")
-
         optimizer.zero_grad()
-
-        print("Starting forward pass...")
 
         outputs = model(images)
 
-        print("Forward pass complete.")
-
         loss = criterion(outputs, labels)
-
-        print(f"Loss calculated: {loss.item():.4f}")
-
-        print("Starting backward pass...")
 
         loss.backward()
 
-        print("Backward pass complete.")
-
         optimizer.step()
-
-        print("Optimizer step complete.")
 
         running_train_loss += loss.item()
 
@@ -207,7 +193,18 @@ for epoch in range(EPOCHS):
         total_train += labels.size(0)
         correct_train += (predicted == labels).sum().item()
 
-        # Stop after the first batch for this diagnostic
-        break
+        if (batch_index + 1) % 10 == 0:
+            elapsed = time.time() - start_time
+            # Printing every 100 batches to make sure that
+            # as progress report.
+            print(
+                f"Batch {batch_index + 1}/{len(train_loader)} "
+                f"| Loss: {loss.item():.4f} "
+                f"| Time: {elapsed:.2f}s"
+            )
+
+        # Stop after two batches for this diagnostic
+        if batch_index == 49:
+            break
 
     print("\nFirst training batch completed successfully.")
