@@ -31,6 +31,7 @@ from torchvision.models import (
     EfficientNet_B0_Weights #pretrained ImageNet weights
 )
 from dataset_loader import create_dataloaders
+from pathlib import Path
 
 # =============
 # Configuration
@@ -38,14 +39,16 @@ from dataset_loader import create_dataloaders
 
 DATASET_DIR = "dataset"
 MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
+BEST_VAL_ACCURACY = 0.0
 BATCH_SIZE = 8
-EPOCHS = 1
+EPOCHS = 3
 LEARNING_RATE = 0.0001 # baseline configuration
 NUM_CLASSES = 3
 DEVICE = (
     "cpu"
 )
 
+"""
 # ======================
 # Basic Environment Test
 # ======================
@@ -57,6 +60,7 @@ if __name__ == "__main__":
 
     print(f"PyTorch version: {torch.__version__}")
     print(f"Using device: {DEVICE}")
+"""
 
 # ===============
 # Load the Datset
@@ -65,13 +69,16 @@ train_loader, val_loader, test_loader = create_dataloaders(
     DATASET_DIR,
     BATCH_SIZE
 )
-
-#Test script
 print ("\nDataset loaded successfully!")
+
+"""
+#Test script
 
 print(f"Training batches: {len(train_loader)}")
 print(f"Validation batches: {len(val_loader)}")
 print(f"Testing batches: {len(test_loader)}")
+"""
+
 
 # ==============
 # Model Creation
@@ -91,13 +98,16 @@ model.classifier[1] = nn.Linear(
 )
 model.to(DEVICE)
 
+
 # ====
 # Test
 # ====
 
 print ("\nModel created successfully!")
-print (model)
+# print (model)
 
+
+"""
 # ========================================
 # Forward Pass Test (NO LEARNING DONE YET)
 # ========================================
@@ -125,6 +135,7 @@ print(outputs.shape)
 
 print("\nPredictions:")
 print(outputs)
+"""
 
 
 
@@ -132,14 +143,10 @@ print(outputs)
 # Loss Function and Optimizer
 # ===========================
 
-
-# Loss function for three-class classification
-# Measures how far predicted class scores are from correct
-# class.
+# Loss function for three-class classification m how far predicted class scores are from correct class.
 criterion = nn.CrossEntropyLoss()
 
-# Using Adam as optimizer, updates model's weights during
-# training to reduce loss.
+# Using Adam as optimizer, updates model's weights during training to reduce loss.
 optimizer = torch.optim.Adam(
     model.parameters(),
     lr=LEARNING_RATE
@@ -150,6 +157,21 @@ print(f"Loss function: {criterion}")
 print(f"Optimizer: Adam")
 print(f"Learning rate: {LEARNING_RATE}")
 
+Path ("models").mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+# ================
+# Training History
+# ================
+
+history = {
+    "train_loss": [],
+    "train_accuracy": [],
+    "val_loss": [],
+    "val_accuracy": []
+}
 
 # =========================
 # Training and Validation
@@ -159,11 +181,11 @@ import time
 
 print("\nStarting training...")
 
-epoch_start_time = time.time()
-
 for epoch in range(EPOCHS):
 
     print(f"\nStarting epoch {epoch + 1}/{EPOCHS}")
+
+    epoch_start_time = time.time()
 
     model.train()
 
@@ -261,9 +283,59 @@ for epoch in range(EPOCHS):
         100 * correct_val / total_val
     )
 
-    # =====================
+    # ===================
+    # Store Epoch Results
+    # ===================
+
+    history["train_loss"].append(train_loss)
+    history["train_accuracy"].append(train_accuracy)
+    history["val_loss"].append(val_loss)
+    history["val_accuracy"].append(val_accuracy)
+
+    # ================
+    # Save Every Epoch
+    # ================
+
+    torch.save( #to save each model
+            {
+                "epoch": epoch + 1, #save epoch number
+                "model_state_dict": model.state_dict(),  #what were the model weights
+                "optimizer_state_dict": optimizer.state_dict(), #what was the optimizer state
+                "train_loss": train_loss,
+                "train_accuracy": train_accuracy,
+                "val_accuracy": val_accuracy,
+                "val_loss": val_loss
+            },
+            f"models/efficientnet_b0_epoch_{epoch + 1}.pth"
+        )
+
+    # ===============
+    # Save Best Model
+    # ===============
+
+    if val_accuracy > BEST_VAL_ACCURACY:
+            BEST_VAL_ACCURACY = val_accuracy
+
+            torch.save( #to save the best model
+            {
+                "epoch": epoch + 1, #save epoch number
+                "model_state_dict": model.state_dict(),  #what were the model weights
+                "optimizer_state_dict": optimizer.state_dict(), #what was the optimizer state
+                "val_accuracy": val_accuracy,
+                "val_loss": val_loss
+            },
+            MODEL_SAVE_PATH
+        )
+
+            print ("\n New best model saved!")
+            print (
+                f"Best validation accuracy: "
+                f"{BEST_VAL_ACCURACY:.2f}%"
+        )
+
+    # =============
     # Epoch Summary
-    # =====================
+    # =============
 
     epoch_time = time.time() - epoch_start_time
 
@@ -299,6 +371,6 @@ for epoch in range(EPOCHS):
         # Stop after two batches for this diagnostic
         if batch_index == 49:
             break
+            
+        print("\nTraining batch completed successfully.")
     """
-
-    print("\nFirst training batch completed successfully.")
