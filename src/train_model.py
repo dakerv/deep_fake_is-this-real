@@ -40,7 +40,7 @@ DATASET_DIR = "dataset"
 MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
 BATCH_SIZE = 32
 EPOCHS = 15
-LEARNING_RATE = 0.0001 #standard starting point for transfer learning
+LEARNING_RATE = 0.0001 # baseline configuration
 NUM_CLASSES = 3
 DEVICE = (
     "cpu"
@@ -139,7 +139,7 @@ print(outputs)
 criterion = nn.CrossEntropyLoss()
 
 # Using Adam as optimizer, updates model's weights during
-# training.
+# training to reduce loss.
 optimizer = torch.optim.Adam(
     model.parameters(),
     lr=LEARNING_RATE
@@ -149,3 +149,14 @@ print("\nLoss function and optimizer created successfully!")
 print(f"Loss function: {criterion}")
 print(f"Optimizer: Adam")
 print(f"Learning rate: {LEARNING_RATE}")
+
+
+# =======================
+# Training and Validation
+# =======================
+
+for epoch in range(EPOCHS):
+    # Training Phase
+    # --------------
+
+    model.train()
