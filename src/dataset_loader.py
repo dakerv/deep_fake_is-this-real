@@ -81,13 +81,6 @@ class DeepfakeDataset(Dataset):
                 for image_path in class_folder.glob(extension):
                     self.images.append((image_path, label))
 
-                self.images.append(
-                    (
-                        image_path,
-                        label
-                    )
-                )
-
     # ------------------------
     # Required Dataset Methods
     # ------------------------            

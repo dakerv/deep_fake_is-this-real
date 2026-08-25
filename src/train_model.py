@@ -98,9 +98,9 @@ model.to(DEVICE)
 print ("\nModel created successfully!")
 print (model)
 
-# =================
-# Forward Pass Test
-# =================
+# ========================================
+# Forward Pass Test (NO LEARNING DONE YET)
+# ========================================
 
 model.eval() # switch model to evaluation mode (testing)
 
