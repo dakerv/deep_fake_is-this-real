@@ -173,9 +173,11 @@ for epoch in range(EPOCHS):
 
     for batch_index, (images, labels) in enumerate(train_loader):
 
+        # Move data to CPU
         images = images.to(DEVICE)
         labels = labels.to(DEVICE)
 
+        # Clear the previous gradients
         optimizer.zero_grad()
 
         outputs = model(images)
@@ -186,8 +188,10 @@ for epoch in range(EPOCHS):
 
         optimizer.step()
 
+        # Track training loss
         running_train_loss += loss.item()
 
+        # Calculate predictions
         _, predicted = torch.max(outputs, 1)
 
         total_train += labels.size(0)
@@ -195,16 +199,17 @@ for epoch in range(EPOCHS):
 
         if (batch_index + 1) % 10 == 0:
             elapsed = time.time() - start_time
-            # Printing every 100 batches to make sure that
-            # as progress report.
+            # Printing every 100 batches to as progress report.
             print(
                 f"Batch {batch_index + 1}/{len(train_loader)} "
-                f"| Loss: {loss.item():.4f} "
+                f"| Loss: {loss.item():.4f}"
                 f"| Time: {elapsed:.2f}s"
             )
 
+        """
         # Stop after two batches for this diagnostic
         if batch_index == 49:
             break
+        """
 
     print("\nFirst training batch completed successfully.")
