@@ -159,6 +159,8 @@ import time
 
 print("\nStarting training...")
 
+epoch_start_time = time.time()
+
 for epoch in range(EPOCHS):
 
     print(f"\nStarting epoch {epoch + 1}/{EPOCHS}")
@@ -206,10 +208,97 @@ for epoch in range(EPOCHS):
                 f"| Time: {elapsed:.2f}s"
             )
 
-        """
+    # =====================
+    # Training Results
+    # =====================
+
+    train_loss = running_train_loss / len(train_loader)
+
+    train_accuracy = (
+        100 * correct_train / total_train
+    )
+
+    # =====================
+    # Validation Phase
+    # =====================
+
+    model.eval()
+
+    running_val_loss = 0.0
+    correct_val = 0
+    total_val = 0
+
+    print("\nStarting validation...")
+
+    with torch.no_grad():
+
+        for images, labels in val_loader:
+
+            images = images.to(DEVICE)
+            labels = labels.to(DEVICE)
+
+            # Forward pass
+            outputs = model(images)
+
+            # Calculate validation loss
+            loss = criterion(outputs, labels)
+
+            running_val_loss += loss.item()
+
+            # Calculate predictions
+            _, predicted = torch.max(outputs, 1)
+
+            total_val += labels.size(0)
+            correct_val += (predicted == labels).sum().item()
+
+    # =====================
+    # Validation Results
+    # =====================
+
+    val_loss = running_val_loss / len(val_loader)
+
+    val_accuracy = (
+        100 * correct_val / total_val
+    )
+
+    # =====================
+    # Epoch Summary
+    # =====================
+
+    epoch_time = time.time() - epoch_start_time
+
+    print("\n" + "=" * 60)
+
+    print(
+        f"Epoch [{epoch + 1}/{EPOCHS}] completed"
+    )
+
+    print(
+        f"Training Loss: {train_loss:.4f}"
+    )
+
+    print(
+        f"Training Accuracy: {train_accuracy:.2f}%"
+    )
+
+    print(
+        f"Validation Loss: {val_loss:.4f}"
+    )
+
+    print(
+        f"Validation Accuracy: {val_accuracy:.2f}%"
+    )
+
+    print(
+        f"Epoch Time: {epoch_time:.2f} seconds"
+    )
+
+    print("=" * 60)
+
+    """
         # Stop after two batches for this diagnostic
         if batch_index == 49:
             break
-        """
+    """
 
     print("\nFirst training batch completed successfully.")
