@@ -114,7 +114,7 @@ After Epoch 8, subsequent epochs showed signs of overfitting.
 
 The selected model was run on a new testing dataset of 1350 unseen images and correctly classified 1297/1350 of the images, an accuracy of 96.07%
 
-That gives our model the following stats:
+That gives the model the following stats:
 Training accuracy - 97.40%
 Validation accuracy - 95.85%
 Test accuracy - 96.07%
@@ -147,6 +147,6 @@ Test accuracy	    96.07%
 Test images	        1,350
 Correct	            1,297
 Incorrect	        53
-Real F1	            94.13%
+Real F1             94.13%
 Synthetic F1	    94.21%
 Swapped F1	        99.89%
