@@ -1,0 +1,1 @@
+After running 10 epochs incrementally, epoch 8 was discovered to be the best model.
