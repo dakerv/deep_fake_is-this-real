@@ -95,6 +95,7 @@ print(
     f"{checkpoint['val_accuracy']:.2f}%"
 )
 
+"""
 # =====================
 # Test Model
 # =====================
@@ -150,6 +151,113 @@ print(
 print(
     f"Test Accuracy: "
     f"{test_accuracy:.2f}%"
+)
+
+print("=" * 60)
+"""
+
+# =====================
+# Final Test Evaluation
+# =====================
+
+from sklearn.metrics import (
+    confusion_matrix,
+    classification_report
+)
+
+model.eval()
+
+all_predictions = []
+all_labels = []
+
+correct = 0
+total = 0
+
+print("\nStarting final test evaluation...")
+
+with torch.no_grad():
+
+    for images, labels in test_loader:
+
+        images = images.to(DEVICE)
+        labels = labels.to(DEVICE)
+
+        #Forward pass
+        outputs = model(images)
+
+        # Get predicted class
+        _, predicted = torch.max(
+            outputs,
+            1
+        )
+
+        # Store predictions and actual labels
+        all_predictions.extend(
+            predicted.cpu().numpy()
+        )
+
+        all_labels.extend(
+            labels.cpu().numpy()
+        )
+
+        # Track overall accuracy
+        total += labels.size(0)
+
+        correct += (
+            predicted == labels
+        ).sum().item()
+
+# =====================
+# Overall Accuracy
+# =====================
+
+test_accuracy = (
+    100 * correct / total
+)
+
+print("\n" + "=" * 60)
+
+print("FINAL TEST RESULTS")
+
+print("=" * 60)
+
+print(
+    f"Correct predictions: "
+    f"{correct}/{total}"
+)
+
+print(
+    f"Test Accuracy: "
+    f"{test_accuracy:.2f}%"
+)
+
+
+# =====================
+# Confusion Matrix
+# =====================
+
+cm = confusion_matrix(
+    all_labels,
+    all_predictions
+)
+
+print("\nConfusion Matrix:")
+print(cm)
+
+
+# =====================
+# Classification Report
+# =====================
+
+print("\nClassification Report:")
+
+print(
+    classification_report(
+        all_labels,
+        all_predictions,
+        target_names=CLASS_NAMES,
+        digits=4
+    )
 )
 
 print("=" * 60)
