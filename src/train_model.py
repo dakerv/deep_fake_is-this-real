@@ -41,10 +41,10 @@ DATASET_DIR = "dataset"
 MODEL_SAVE_PATH = "models/efficientnet_b0.pth"
 RESUME_CHECKPOINT_PATH = "models/training_checkpoint.pth" # Recovery checkpoint
 CHECKPOINT_FREQUENCY = 50 #Save a recovery checkpoint for every 50 batches
-RESUME_TRAINING = False # Will be set to true when resuming an interrupted training run
+RESUME_TRAINING = False # To true when resuming an interrupted training run
 BEST_VAL_ACCURACY = 0.0
 BATCH_SIZE = 8
-EPOCHS = 3
+EPOCHS = 10
 LEARNING_RATE = 0.0001 # baseline configuration
 NUM_CLASSES = 3
 DEVICE = (
@@ -175,6 +175,118 @@ history = {
     "val_accuracy": []
 }
 
+# ========================
+# Resume Training Settings
+# ========================
+
+start_epoch = 0
+start_batch = 0
+
+resume_running_train_loss = 0.0
+resume_correct_train = 0
+resume_total_train = 0
+
+# =====================
+# Continue From Epoch 9
+# =====================
+
+CHECKPOINT_PATH = "models/efficientnet_b0_epoch_9.pth"
+
+checkpoint = torch.load(
+     CHECKPOINT_PATH,
+     map_location=DEVICE
+    )
+
+model.load_state_dict(
+     checkpoint["model_state_dict"]
+    )
+
+optimizer.load_state_dict(
+     checkpoint["optimizer_state_dict"]
+    )
+
+start_epoch = checkpoint["epoch"]
+
+BEST_VAL_ACCURACY = checkpoint["val_accuracy"]
+
+print("\nEpoch 9 checkpoint loaded successfully!")
+
+print(f"Continuing from epoch {start_epoch}")
+
+print(f"Previous validation accuracy: "
+      f"{BEST_VAL_ACCURACY: .2f}%"
+    )
+
+# ========================
+# Load Recovery Checkpoint
+# ========================
+
+if RESUME_TRAINING:
+
+     checkpoint_path = Path(
+          RESUME_CHECKPOINT_PATH
+     )
+
+     if checkpoint_path.exists():
+          print("\nRecovery checkpoint found.")
+          print("Loading checkpoint...")
+
+          checkpoint = torch.load(
+               checkpoint_path,
+               map_location=DEVICE
+          )
+
+          model.load_state_dict(
+               checkpoint["model_state_dict"]
+          )
+
+          optimizer.load_state_dict(
+               checkpoint["optimizer_state_dict"]
+          )
+
+          start_epoch = checkpoint["epoch"]
+          start_batch = checkpoint["batch"]
+
+          resume_running_train_loss = (
+               checkpoint["running_train_loss"]
+          )
+
+          resume_correct_train = (
+            checkpoint["correct_train"]
+        )
+
+          resume_total_train = (
+            checkpoint["total_train"]
+        )
+
+          BEST_VAL_ACCURACY = (
+            checkpoint["best_val_accuracy"]
+        )
+
+          history = checkpoint["history"]
+
+          print("\nCheckpoint loaded successfully!")
+
+          print(
+            f"Resuming from epoch "
+            f"{start_epoch + 1}"
+        )
+
+          print(
+            f"Resuming from batch "
+            f"{start_batch + 1}"
+        )
+
+else:
+
+          print(
+            "\nNo recovery checkpoint found."
+        )
+
+          print(
+            "Starting training from the beginning."
+        )
+
 # =========================
 # Training and Validation
 # =========================
@@ -183,7 +295,7 @@ import time
 
 print("\nStarting training...")
 
-for epoch in range(EPOCHS):
+for epoch in range(start_epoch, EPOCHS):
 
     print(f"\nStarting epoch {epoch + 1}/{EPOCHS}")
 
@@ -191,13 +303,29 @@ for epoch in range(EPOCHS):
 
     model.train()
 
-    running_train_loss = 0.0
-    correct_train = 0
-    total_train = 0
+    if epoch == start_epoch and start_batch > 0:
+
+         running_train_loss = resume_running_train_loss
+         correct_train = resume_correct_train
+         total_train = resume_total_train
+
+         print(
+              f"Resuming from batch "
+              f"{start_batch + 1}"
+         )
+
+    else:
+        running_train_loss = 0.0
+        correct_train = 0
+        total_train = 0
 
     start_time = time.time()
 
     for batch_index, (images, labels) in enumerate(train_loader):
+
+        # Skip batches already completed before interruption
+        if batch_index < start_batch:
+            continue
 
         # Move data to CPU
         images = images.to(DEVICE)
@@ -230,6 +358,46 @@ for epoch in range(EPOCHS):
                 f"Batch {batch_index + 1}/{len(train_loader)} "
                 f"| Loss: {loss.item():.4f}"
                 f"| Time: {elapsed:.2f}s"
+            )
+
+    # =========================
+    # Recovery Checkpoint
+    # =========================
+
+        if (batch_index + 1) % CHECKPOINT_FREQUENCY == 0:
+
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "batch": batch_index + 1,
+
+                    "model_state_dict":
+                        model.state_dict(),
+
+                    "optimizer_state_dict":
+                        optimizer.state_dict(),
+
+                    "running_train_loss":
+                        running_train_loss,
+
+                    "correct_train":
+                        correct_train,
+
+                    "total_train":
+                        total_train,
+
+                    "best_val_accuracy":
+                        BEST_VAL_ACCURACY,
+
+                    "history":
+                        history
+                },
+                RESUME_CHECKPOINT_PATH
+            )
+
+            print(
+                f"\n✓ Recovery checkpoint saved "
+                f"at batch {batch_index + 1}"
             )
 
     # =====================
@@ -368,6 +536,16 @@ for epoch in range(EPOCHS):
     )
 
     print("=" * 60)
+
+    # =========================
+    # Reset Resume Position
+    # =========================
+
+    start_batch = 0
+
+    resume_running_train_loss = 0.0
+    resume_correct_train = 0
+    resume_total_train = 0
 
     """
         # Stop after two batches for this diagnostic
