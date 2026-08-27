@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background-color: #f2efe7;
+  color: #17191b;
+}
+::selection {
+  background-color: #17191b;
+  color: #f7f5ef;
+}
+/* Faint paper tooth — an archival imperfection, not a texture effect */
+.paper-grain {
+  position: relative;
+}
+.paper-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hairline-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.hairline-underline:hover,
+.hairline-underline:focus-visible {
+  background-size: 100% 1px;
+}
+:focus-visible {
+  outline: 1px solid #17191b;
+  outline-offset: 3px;
+}
