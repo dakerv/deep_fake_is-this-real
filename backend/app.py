@@ -2,7 +2,7 @@ from flask import Flask, request
 import torch
 from PIL import Image
 from torchvision import transforms
-from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
+from torchvision.models import efficientnet_b0
 import torch.nn as nn
 
 NUM_CLASSES = 3
@@ -18,7 +18,7 @@ model.classifier[1] = nn.Linear(
 )
 
 checkpoint = torch.load( # loading the best saved model
-    "models/efficientnet_b0.pth",
+    "../models/efficientnet_b0.pth",
     map_location=DEVICE
 )
 
@@ -29,7 +29,7 @@ model.load_state_dict( # loading the weights from the best saved model
 model.to(DEVICE)
 model.eval() # no learning, just predictions
 
-inference_transform = transforms.Compose( # transformations from training and evaluation, with added resizing of images.
+inference_transform = transforms.Compose( # transformations from validation and evaluation, with added resizing of images.
     [
         transforms.Resize((256, 256)),
         transforms.ToTensor(),
@@ -42,7 +42,7 @@ inference_transform = transforms.Compose( # transformations from training and ev
 
 app = Flask(__name__) # creates flask application
 
-@app.route("/") # Initial route named '/' sends GET request
+@app.route("/") # Initial route named '/' sends GET request by default because we didn't specify
 def home():
     return "Deepfake Detection Backend is running!" # message received when someone visits
 
@@ -63,7 +63,7 @@ def predict():
 
     image_tensor = inference_transform(image)
 
-    image_tensor = image_tensor.unsqueeze(0) # unsqueeze to show we're predicting only one image, not 8 like during training. so from [3, 256, 256] to [1, 3, 256, 256]
+    image_tensor = image_tensor.unsqueeze(0) # unsqueeze to add a batch dimension explaining that we're predicting only one image, not 8 like during training. so from [3, 256, 256] to [1, 3, 256, 256]
 
     image_tensor = image_tensor.to(DEVICE)
 
@@ -80,9 +80,17 @@ def predict():
 
         confidence = probabilities[0][predicted_class].item() # gets the probability corresponding to the class the model selected
 
+        class_names = [
+            "real",
+            "synthetic",
+            "swapped"
+        ]
+
+        prediction = class_names[predicted_class]
+
     return {
-        "message": "Image received successfully!",
-        "filename": image.filename 
+    "prediction": prediction,
+    "confidence": confidence
     }
 
 if __name__ == "__main__": # if we're running this file directly, start Flask server
