@@ -101,6 +101,11 @@ def predict():
 
             prediction = class_names[predicted_class]
 
+            class_probabilities = {
+                class_names[i]: probabilities[0][i].item()
+                for i in range(NUM_CLASSES)
+            }
+
     except Exception as error:
         print(f"Prediction error: {error}")
 
@@ -110,7 +115,8 @@ def predict():
 
     return {
     "prediction": prediction,
-    "confidence": confidence
+    "confidence": confidence,
+    "probabilities": class_probabilities
     }
 
 if __name__ == "__main__": # if we're running this file directly, start Flask server
