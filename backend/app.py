@@ -57,14 +57,20 @@ def predict():
 
     image = request.files["image"] # request helps us ask for something in order to do something
 
-    if image.filename == "":
+    if image.filename == "": # in case user didn't select a file but clicked button to show prediction.
         return {
         "error": "No image was selected"
     }, 400
 
     print(f"Received image: {image.filename}")
 
-    image = Image.open(image).convert("RGB")
+    try:
+        image = Image.open(image).convert("RGB")
+
+    except UnidentifiedImageError: # send an error instead of crushing if image is unsuitable in any way
+        return {
+            "error": "The uploaded file is not a valid image"
+        }, 400
 
     image_tensor = inference_transform(image)
 
