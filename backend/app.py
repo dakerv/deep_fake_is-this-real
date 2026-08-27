@@ -1,6 +1,6 @@
 from flask import Flask, request
 import torch
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from torchvision import transforms
 from torchvision.models import efficientnet_b0
 import torch.nn as nn
@@ -55,7 +55,12 @@ def predict():
             "error": "No image was provided"
         }, 400
 
-    image = request.files["image"] # request helps us ask for something in order to do something7
+    image = request.files["image"] # request helps us ask for something in order to do something
+
+    if image.filename == "":
+        return {
+        "error": "No image was selected"
+    }, 400
 
     print(f"Received image: {image.filename}")
 
