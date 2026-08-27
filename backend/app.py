@@ -15,7 +15,7 @@ def predict():
             "error": "No image was provided"
         }, 400
 
-    image = request.files["image"] # request helps us ask for something in order to do something
+    image = request.files["image"] # request helps us ask for something in order to do something7
 
     print(f"Received image: {image.filename}")
 

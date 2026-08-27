@@ -1,6 +1,6 @@
 import requests
 
-IMAGE_PATH = "/deep_fake_is-this-real/dataset/test/real/02262.jpg"
+IMAGE_PATH = "dataset/test/real/real_8672.png"
 
 with open(IMAGE_PATH, "rb") as image_file:
     response = requests.post(
