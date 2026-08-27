@@ -31,7 +31,7 @@ model.eval() # no learning, just predictions
 
 inference_transform = transforms.Compose( # transformations from validation and evaluation, with added resizing of images.
     [
-        transforms.Resize((256, 256)),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],
