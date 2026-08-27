@@ -67,7 +67,7 @@ def predict():
     try:
         image = Image.open(image).convert("RGB")
 
-    except UnidentifiedImageError: # send an error instead of crushing if image is unsuitable in any way
+    except UnidentifiedImageError: # send an error instead of crashing if image is unsuitable in any way
         return {
             "error": "The uploaded file is not a valid image"
         }, 400
@@ -78,26 +78,35 @@ def predict():
 
     image_tensor = image_tensor.to(DEVICE)
 
-    with torch.no_grad(): # don't calculate gradients
+    try:
 
-        outputs = model(image_tensor) # images enters model and prediction is made, three scores, one for each class
+        with torch.no_grad(): # don't calculate gradients
 
-        probabilities = torch.softmax(outputs, dim=1) # converts those scores into values that behave like probabilities
+            outputs = model(image_tensor) # images enters model and prediction is made, three scores, one for each class
 
-        predicted_class = torch.argmax( # which class has the highest probability? 0, 1, 2 for each class respectively
-            probabilities,
-            dim=1
-        ).item()
+            probabilities = torch.softmax(outputs, dim=1) # converts those scores into values that behave like probabilities
 
-        confidence = probabilities[0][predicted_class].item() # gets the probability corresponding to the class the model selected
+            predicted_class = torch.argmax( # which class has the highest probability? 0, 1, 2 for each class respectively
+                probabilities,
+                dim=1
+            ).item()
 
-        class_names = [
-            "real",
-            "synthetic",
-            "swapped"
-        ]
+            confidence = probabilities[0][predicted_class].item() # gets the probability corresponding to the class the model selected
 
-        prediction = class_names[predicted_class]
+            class_names = [
+                "real",
+                "synthetic",
+                "swapped"
+            ]
+
+            prediction = class_names[predicted_class]
+
+    except Exception as error:
+        print(f"Prediction error: {error}")
+
+        return {
+            "error": "An error occurred while processing the image"
+        }, 500
 
     return {
     "prediction": prediction,
