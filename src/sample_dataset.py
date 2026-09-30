@@ -252,7 +252,7 @@ def main():
 
     print("\nSampling real images...\n")
 
-    # Sample FFHQ real images
+    # Sample FFHQ real images #Sample datasets that do not begin with the same prefix.
     sample_images(
         FFHQ_SOURCE,
         REAL_DEST,
