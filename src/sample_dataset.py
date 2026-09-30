@@ -1,3 +1,4 @@
+```python
 """
 Deepfake Detection - Data Sampling Pipeline
 
@@ -56,8 +57,6 @@ from pathlib import Path
 # Configuration
 # =============
 
-RANDOM_SEED = 42
-
 # Real dataset contribution
 FFHQ_IMAGES = 3000 #1500
 CELEBDF_IMAGES = 3000 #1500
@@ -112,8 +111,6 @@ SWAPPED_DEST = (
     "swapped" /
     "swapped_sampled"
 )
-
-random.seed(RANDOM_SEED)
 
 def get_image_files(folder):
     """
@@ -173,11 +170,11 @@ def clear_folder(folder):
             exist_ok=True
         )
 
-def sample_images (source, destination, number):
+def sample_images(source, destination, number):
 
     """
-    Randomly select images from a source folder
-    and copy them into a destination folder.
+    Randomly select images from a source folder while
+    distributing the selection across the entire source dataset.
 
     Parameters
     ----------
@@ -192,18 +189,17 @@ def sample_images (source, destination, number):
 
     """
 
-   # Create destination folder if it does not exist
+    # Create destination folder if it does not exist
     destination.mkdir(
-       parents=True,
-       exist_ok=True
+        parents=True,
+        exist_ok=True
     )
 
-   # Find all images
+    # Find all images
     image_files = get_image_files(source)
 
     print(f"\nSource: {source}")
     print(f"Available images: {len(image_files)}")
-
 
     # Check enough images exist
     if len(image_files) < number:
@@ -213,12 +209,25 @@ def sample_images (source, destination, number):
             f"Requested {number}, found {len(image_files)}"
         )
 
+    # Randomly shuffle the complete source list
+    random.shuffle(image_files)
 
-    # Random selection
-    selected_images = random.sample(
-        image_files,
-        number
-    )
+    # Divide the shuffled dataset into sections
+    section_size = len(image_files) / number
+
+    selected_images = []
+
+    # Select one random image from each section
+    for i in range(number):
+
+        start = int(i * section_size)
+        end = int((i + 1) * section_size)
+
+        section = image_files[start:end]
+
+        selected_image = random.choice(section)
+
+        selected_images.append(selected_image)
 
     # Copy images
     for image in selected_images:
@@ -228,10 +237,9 @@ def sample_images (source, destination, number):
             destination / image.name
         )
 
-
     print(
         f"Copied {number} images to {destination}"
-    ) 
+    )
 
 # =============
 # Main Pipeline
@@ -252,7 +260,7 @@ def main():
 
     print("\nSampling real images...\n")
 
-    # Sample FFHQ real images #Sample datasets that do not begin with the same prefix.
+    # Sample FFHQ real images
     sample_images(
         FFHQ_SOURCE,
         REAL_DEST,
@@ -302,3 +310,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
