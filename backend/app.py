@@ -1,5 +1,7 @@
 from flask import Flask, request
 import torch
+import cv2
+import numpy as np
 from PIL import Image, UnidentifiedImageError
 from torchvision import transforms
 from torchvision.models import efficientnet_b0
@@ -18,7 +20,7 @@ model.classifier[1] = nn.Linear(
 )
 
 checkpoint = torch.load( # loading the best saved model
-    "../models/efficientnet_b0.pth",
+    "../models (experiment two)/efficientnet_b0.pth",
     map_location=DEVICE
 )
 
@@ -39,6 +41,12 @@ inference_transform = transforms.Compose( # transformations from validation and 
         )
     ]
 )
+
+# ==============
+# Face Detection
+# ==============
+
+face_detector = cv2.CascadeClassifier( cv2.data.haarcascades + "haarcascade_frontalface_default.xml" )
 
 app = Flask(__name__) # creates flask application
 
@@ -71,6 +79,37 @@ def predict():
         return {
             "error": "The uploaded file is not a valid image"
         }, 400
+
+# ==============
+# Face Detection 
+# ==============
+    
+    try: 
+
+        image_array = np.array(image) 
+        
+        gray_image = cv2.cvtColor(
+            image_array, 
+            cv2.COLOR_RGB2GRAY 
+        ) 
+        
+        faces = face_detector.detectMultiScale(
+            gray_image,
+            scaleFactor=1.1,
+            minNeighbors=5,
+            minSize=(30, 30) 
+        ) 
+        
+        if len(faces) == 0: 
+            return { 
+                "error": "No face was detected in the uploaded image. Please upload an image containing a visible face." 
+            }, 400 
+        
+    except Exception as error: 
+        print(f"Face detection error: {error}") 
+        
+        return { "error": "An error occurred while checking the image for a face"
+        }, 500
 
     image_tensor = inference_transform(image)
 
