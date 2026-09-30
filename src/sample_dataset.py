@@ -1,4 +1,3 @@
-```python
 """
 Deepfake Detection - Data Sampling Pipeline
 
@@ -310,4 +309,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
