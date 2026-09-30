@@ -700,7 +700,7 @@ Special acknowledgement is given to the creators and distributors of the dataset
 
 ## Author
 
-**Kendall Blacc**
+**Vanessa Elinam Daker**
 
 University of Ghana, Legon
 Department of Computer Science
