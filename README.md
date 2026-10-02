@@ -604,7 +604,7 @@ The training pipeline can be used to train the EfficientNet-B0 model using the p
 From the appropriate project directory:
 
 ```powershell
-python src\train_model.py
+python src\train_model2.py
 ```
 
 The training pipeline:
