@@ -713,7 +713,7 @@ Potential areas for future development include:
 
 # Academic Context
 
-This project was developed as a **final-year project at the University of Ghana, Legon** within the field of Information Technology / Computer Science.
+This project was developed as a **final-year project at the University of Ghana, Legon** within the field of Computer Science.
 
 The project investigates the use of convolutional neural networks and transfer learning for automated deepfake image classification.
 
